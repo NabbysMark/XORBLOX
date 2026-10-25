@@ -1,0 +1,24 @@
+RewriteEngine On
+Options -Indexes
+DirectoryIndex index.php
+
+# Redirect / to /Default.aspx
+RewriteRule ^$ /Default.aspx [R=302,L]
+
+# Convert .aspx URLs to PHP files internally
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteRule ^(.+)\.aspx$ /$1.php [END,NC]
+
+# Convert handler URLs to PHP files
+RewriteRule ^(.+)\.(ashx|asmx|axd)$ /$1.php [END,NC]
+
+# Extensionless PHP routes
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_FILENAME}.php -f
+RewriteRule ^([^/.]+)/?$ $1.php [END]
+
+ErrorDocument 404 /Error/Default.php
+
+<IfModule mod_headers.c>
+    Header set Access-Control-Allow-Origin "*"
+</IfModule>
