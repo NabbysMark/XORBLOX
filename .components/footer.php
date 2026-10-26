@@ -1,6 +1,6 @@
 <div id="Footer">				
     <hr>
-    <p class="Legalese">ROBLOX, "Online Building Toy", characters, logos, names, and all related indicia are trademarks of <a id="ctl00_rbxFooter_hlRobloxCorporation" href="/info/About.aspx">ROBLOX Corporation</a>, ©2008. Patents pending.<br>ROBLOX Corp. is not affiliated with Lego, MegaBloks, Bionicle, Pokemon, Nintendo, Lincoln Logs, Yu Gi Oh, K'nex, Tinkertoys, Erector Set, or the Pirates of the Caribbean. ARrrr!<br>Use of this site signifies your acceptance of the
+    <p class="Legalese">XORBLOX, "Online Building Toy", characters, logos, names, and all related indicia are trademarks of <a id="ctl00_rbxFooter_hlRobloxCorporation" href="/info/About.aspx">XORBLOX Corporation</a>, ©2008. Patents pending.<br>XORBLOX Corp. is not affiliated with Lego, MegaBloks, Bionicle, Pokemon, Nintendo, Lincoln Logs, Yu Gi Oh, K'nex, Tinkertoys, Erector Set, or the Pirates of the Caribbean. ARrrr!<br>Use of this site signifies your acceptance of the
     <a id="ctl00_rbxFooter_hlTermsOfService" href="/info/TermsOfService.aspx">Terms and Conditions</a>.<br>
     <a id="ctl00_rbxFooter_hlPrivacyPolicy" href="/info/Privacy.aspx">Privacy Policy</a>
     &nbsp;|&nbsp; <a href="https://web.archive.org/web/20080613193808/mailto:info@roblox.com">Contact Us</a> &nbsp;|&nbsp;

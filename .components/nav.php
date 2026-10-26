@@ -12,14 +12,14 @@
 								<span id="ctl00_lSettings"></span>
 							</div>
 						</div>
-						<div id="Logo" style="height: 58px;"><a id="ctl00_rbxImage_Logo" title="ROBLOX" href="/" style="display:inline-block;cursor:pointer;"><img src="/images/roblox_logo.png" border="0" alt="ROBLOX" blankurl="http://t6.roblox.com:80/blank-224x59.gif"></a>
+						<div id="Logo" style="height: 58px;"><a id="ctl00_rbxImage_Logo" title="XORBLOX" href="/" style="display:inline-block;cursor:pointer;"><img src="/images/roblox_logo.png" border="0" alt="XORBLOX" blankurl="http://t6.roblox.com:80/blank-224x59.gif"></a>
 						</div>
 						<div id="Alerts"><table style="width:100%;height:100%"><tbody><tr><td valign="middle"><a id="ctl00_rbxAlerts_SignupAndPlayHyperLink" class="SignUpAndPlay" text="Sign-up and Play!" href="/Login/New.aspx?ReturnUrl=%2fGames.aspx" style="display:inline-block;cursor:pointer;"><img src="/images/BannerPlay.png" border="0" blankurl="http://t1.roblox.com:80/blank-210x40.gif"></a>
 
 </td></tr></tbody></table></div>
 					</div>
 					<div class="Navigation">
-						<span><a id="ctl00_hlMyRoblox" class="MenuItem" href="User.aspx">My ROBLOX</a></span>
+						<span><a id="ctl00_hlMyRoblox" class="MenuItem" href="User.aspx">My XORBLOX</a></span>
 						<span class="Separator">&nbsp;|&nbsp;</span>
 						<span><a id="ctl00_hlGames" class="MenuItem" href="Games.aspx">Games</a></span>
 						<span class="Separator">&nbsp;|&nbsp;</span>
