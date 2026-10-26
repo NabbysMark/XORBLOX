@@ -1,10 +1,12 @@
 # XORBLOX
 
-<div style="text-align:center;">
+<div align="center">
     <img src="/images/roblox_logo.png" alt="XORBLOX">
 </div>
 
+<p align="center">
 XORBLOX is a project that serves as a self-hosted version of legacy ROBLOX, aiming to replicate the May–June 2008 era.
+</p>
 
 # RCCService
 
