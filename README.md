@@ -3,9 +3,13 @@
 <div align="center">
     <img src="/images/roblox_logo.png" alt="XORBLOX">
 </div>
+<hr>
+<p align="center">
+    <b>XORBLOX is a project that serves as a self-hosted version of legacy ROBLOX, aiming to replicate the May–June 2008 era.</b>
+</p>
 
 <p align="center">
-XORBLOX is a project that serves as a self-hosted version of legacy ROBLOX, aiming to replicate the May–June 2008 era.
+  <img src="https://img.shields.io/badge/php-8.2%2B-777bb4?style=flat-square&logo=php&logoColor=white" alt="php 8.2+">
 </p>
 
 # RCCService
