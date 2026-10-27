@@ -64,8 +64,8 @@
                             
                     </div>
                     <div id="RobloxAtAGlance">
-                        <h2>ROBLOX Virtual Playworld</h2>
-                        <h3>ROBLOX is Free!</h3>
+                        <h2>XORBLOX Virtual Playworld</h2>
+                        <h3>XORBLOX is Free!</h3>
                         <ul id="ThingsToDo">
                             <li id="Point1">
                                 <h3>Build your personal Place</h3>
@@ -92,7 +92,7 @@
                         <div id="ctl00_cphRoblox_pForParents">
                 
                             <div id="ForParents">
-                                <a id="ctl00_cphRoblox_hlKidSafe" title="ROBLOX is kid-safe!" href="Parents.aspx" style="display:inline-block;"><img title="ROBLOX is kid-safe!" src="/images/COPPASeal-125x125.jpg" border="0"></a>
+                                <a id="ctl00_cphRoblox_hlKidSafe" title="XORBLOX is kid-safe!" href="Parents.aspx" style="display:inline-block;"><img title="XORBLOX is kid-safe!" src="/images/COPPASeal-125x125.jpg" border="0"></a>
                             </div>
                         
             </div>
@@ -117,7 +117,7 @@
                         </div>
                         <div id="UserPlaces_Header">
                             <h3>Cool Places</h3>
-                            <p>Check out some of our favorite ROBLOX places!</p>
+                            <p>Check out some of our favorite XORBLOX places!</p>
                         </div>
                         <div id="ctl00_cphRoblox_ie6_peekaboo" style="clear: both"></div>
                     </div>

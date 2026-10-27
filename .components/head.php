@@ -1,4 +1,5 @@
 <title><?php echo isset($title) ? $title : "XORBLOX: A FREE Virtual World-Building Game with Avatar Chat, 3D Environments, and Physics" ?></title>
+<script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
 <link id="ctl00_Imports" rel="stylesheet" type="text/css" href="/CSS/AllCSS.ashx">
 <link id="ctl00_Favicon" rel="Shortcut Icon" type="image/ico" href="/favicon.ico">
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">

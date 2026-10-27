@@ -3,16 +3,6 @@
 <html>
     <head>
         <?php Component::Render("head"); ?>
-        <script src="https://unpkg.com/@ruffle-rs/ruffle"></script>
-        <script type="text/javascript">
-            window.RufflePlayer = window.RufflePlayer || {};
-
-            window.RufflePlayer.config = {
-                autoplay: "on",
-                unmuteOverlay: "hidden",
-                splashScreen: true
-            };
-        </script>
     </head>
     <body>
         <div id="Container">
