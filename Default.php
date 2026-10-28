@@ -1,5 +1,5 @@
 <?php require_once $_SERVER["DOCUMENT_ROOT"] . "/.dependencies/main.php"; ?>
-<?php // ok were gonna write existing php code here ?>
+<?php requireLogin(); ?>
 <!DOCTYPE html>
 <html>
     <head>

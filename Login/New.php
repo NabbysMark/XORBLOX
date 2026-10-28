@@ -7,13 +7,34 @@ if (empty($_SESSION["csrf_token"])) {
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
 	$returnUrl = $_REQUEST["ReturnUrl"] ?? null;
 	$csrfToken = $_POST["csrf_verification"] ?? null;
+	$username = $_POST["username"] ?? null;
+	$password = $_POST["password"] ?? null;
+	$chatmode = $_POST["chatmode"] ?? null;
+	$agegroup = $_POST["chatmode"] ?? null;
+	$email = $_POST["email"] ?? null;
 
 	$hasError = false;
+
+	if ($agegroup == 1) {
+		http_response_code(403);
+        header("Location: /Error/Default.aspx");
+        exit;
+	}
 
     if (!is_string($csrfToken) || !hash_equals($_SESSION["csrf_token"], $csrfToken)) {
         http_response_code(403);
         header("Location: /Error/Default.aspx");
         exit;
+    }
+
+	if (empty($username) || !is_string($username)) {
+        $_SESSION["username_error"] = "Please enter your username.";
+        $hasError = true;
+    }
+
+    if (empty($password) || !is_string($password)) {
+        $_SESSION["password_error"] = [];
+        $hasError = true;
     }
 }
 ?>
@@ -40,7 +61,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 								This will help us to customize your experience.  Users under 13 years will only be shown pre-approved images.
 							</div>
 							<div class="AgeGroupRow">
-								<span id="ctl00_cphRoblox_rblAgeGroup"><input id="ctl00_cphRoblox_rblAgeGroup_0" type="radio" name="ctl00$cphRoblox$rblAgeGroup" value="1" tabindex="5"><label for="ctl00_cphRoblox_rblAgeGroup_0">Under 13 years</label><br><input id="ctl00_cphRoblox_rblAgeGroup_1" type="radio" name="ctl00$cphRoblox$rblAgeGroup" value="2" onclick="javascript:setTimeout('__doPostBack(\'ctl00$cphRoblox$rblAgeGroup$1\',\'\')', 0)" checked="checked" tabindex="5"><label for="ctl00_cphRoblox_rblAgeGroup_1">13 years or older</label></span>
+								<span id="ctl00_cphRoblox_rblAgeGroup"><input id="ctl00_cphRoblox_rblAgeGroup_0" type="radio" name="agegroup" value="1" tabindex="5"><label for="ctl00_cphRoblox_rblAgeGroup_0">Under 13 years</label><br><input id="ctl00_cphRoblox_rblAgeGroup_1" type="radio" name="agegroup" value="2" onclick="javascript:setTimeout('__doPostBack(\'ctl00$cphRoblox$rblAgeGroup$1\',\'\')', 0)" checked="checked" tabindex="5"><label for="ctl00_cphRoblox_rblAgeGroup_1">13 years or older</label></span>
 							</div>
 						</fieldset>
 					</div>
@@ -51,11 +72,12 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 								Use 3-20 alphanumeric characters: A-Z, a-z, 0-9, no spaces
 							</div>
 							<div class="Validators">
-								<div></div>
-								<div></div>
-								<div></div>
-								<div></div>
-								<div></div>
+								<?php if (isset($_SESSION["username_error"])): ?>
+								<div>
+                                	<div style="color:red;text-align:left;"><?= $_SESSION["username_error"] ?></div>
+                                </div>
+								<?php unset($_SESSION["username_error"]); ?>
+								<?php endif; ?>
 							</div>
 							<div class="UsernameRow">
 								<label for="username" id="ctl00_cphRoblox_UserNameLabel" class="Label">Character Name:</label>&nbsp;<input name="username" type="text" id="username" tabindex="1" class="TextBox">

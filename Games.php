@@ -2,6 +2,8 @@
 <?php
 $page = $_GET["p"] ?? 1;
 $assets = $db->fetchAll("SELECT * FROM assets WHERE category = 9");
+
+requireLogin();
 ?>
 <!DOCTYPE html>
 <html>
