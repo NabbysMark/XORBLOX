@@ -1,7 +1,7 @@
 <?php
 require_once $_SERVER["DOCUMENT_ROOT"] . "/.dependencies/main.php";
-$assetId = $_GET["id"] ?? $_GET["ID"] ?? $_GET["assetversionid"] ?? null;
-$version = $_GET["version"] ?? null;
+$assetId = $_REQUEST["id"] ?? $_REQUEST["ID"] ?? $_REQUEST["assetversionid"] ?? null;
+$version = $_REQUEST["version"] ?? null;
 $assetId = is_numeric($assetId) ? (int) $assetId : null;
 
 if (empty($assetId)) {
@@ -12,6 +12,18 @@ $assetPath = $_SERVER["DOCUMENT_ROOT"] . "/Asset/assets/$assetId";
 $cachedPath = $_SERVER["DOCUMENT_ROOT"] . "/Asset/assets/CachedRBLXAssets/$assetId";
 $coreScriptPath = $_SERVER["DOCUMENT_ROOT"] . "/Asset/assets/CoreScripts/$assetId";
 $content = null;
+
+$asset = $db->fetch("SELECT * FROM assets WHERE assetid = ?", [$assetId]);
+
+if (!isset($asset)) {
+    http_response_code(404);
+    exit("Asset not found");
+}
+
+if (!isset($_REQUEST["securityKey"]) || $_REQUEST["securityKey"] !== $settings["site"]["securitykey"]) {
+    http_response_code(401);
+    exit("Unauthorized");
+}
 
 if (file_exists($assetPath)) {
     $content = @file_get_contents($assetPath);

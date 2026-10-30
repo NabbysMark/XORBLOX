@@ -15,7 +15,7 @@ $settings["site"]["securitykey"] = "CHANGE_THIS_TO_ANYTHING_YOU_LIKE";
 $settings["site"]["assetcookie"] = "YOUR_ROBLOSECURITY_KEY";
 
 // database settings * change connectionstring.
-$settings["db"]["connectionstring"] = "localhost;roblox;root;PASSWORD_HERE;5306";
+$settings["db"]["connectionstring"] = "localhost;roblox;root;PASSWORD_HERE;3306";
 
 // RCCService settings * change ip, port if your not using port 64989 and baseurl
 $settings["rcc"]["ip"] = "localhost";
