@@ -1,23 +1,103 @@
 <?php
-$id = $_GET["id"] ?? null;
+require_once $_SERVER["DOCUMENT_ROOT"] . "/.dependencies/main.php";
+$assetId = $_GET["id"] ?? $_GET["ID"] ?? $_GET["assetversionid"] ?? null;
+$version = $_GET["version"] ?? null;
+$assetId = is_numeric($assetId) ? (int) $assetId : null;
 
-if (empty($id)) {
-    die("Invalid id");
+if (empty($assetId)) {
+    exit("Invalid assetId");
 }
 
-$api = "https://proxy.95.fyi/assetrequest.php?id=".$id;
-$path = $_SERVER["DOCUMENT_ROOT"] . "/asset/assets/$id";
-
+$assetPath = $_SERVER["DOCUMENT_ROOT"] . "/Asset/assets/$assetId";
+$cachedPath = $_SERVER["DOCUMENT_ROOT"] . "/Asset/assets/CachedRBLXAssets/$assetId";
+$coreScriptPath = $_SERVER["DOCUMENT_ROOT"] . "/Asset/assets/CoreScripts/$assetId";
 $content = null;
 
-if (!file_exists($path)) {
-    $content = @file_get_contents($api);
-    if ($content === false) {
-        die("Failed to fetch asset");
+if (file_exists($assetPath)) {
+    $content = @file_get_contents($assetPath);
+} elseif (file_exists($coreScriptPath)) {
+    $content = @file_get_contents($coreScriptPath);
+    if ($content !== false) {
+        $asset = "--rbxassetid%" . $assetId . "%\r\n" . $content;
+
+        $asset = str_replace("www.roblox.com", "www.voxera.fit", $asset);
+        $asset = str_replace("roblox.com", "voxera.fit", $asset);
+
+        $signature = null;
+        $privateKeyPath = $_SERVER["DOCUMENT_ROOT"] . "/game/PrivateKey.pem";
+
+        if (file_exists($privateKeyPath)) {
+            $key = file_get_contents($privateKeyPath);
+
+            if ($key !== false) {
+                openssl_sign($asset, $signature, $key, OPENSSL_ALGO_SHA1);
+            }
+        }
+
+        $content = sprintf("--rbxsig%%%s%%%s", base64_encode($signature ?? ''), $asset);
     }
+} elseif (file_exists($cachedPath)) {
+    $content = @file_get_contents($cachedPath);
 } else {
-    $content = file_get_contents($path);
+    $roblosecurity = $settings["site"]["assetcookie"];
+    $url = "https://assetdelivery.roproxy.com/v2/assetId/" . $assetId;
+    if (isset($version)) {
+        $url = "https://assetdelivery.roproxy.com/v2/assetId/" . $assetId . "/version/" . $version;
+    }
+
+    $ch = curl_init($url);
+    curl_setopt_array($ch, [
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_FOLLOWLOCATION => true,
+        CURLOPT_HTTPHEADER => [
+            "Cookie: .ROBLOSECURITY=" . $roblosecurity
+        ],
+        CURLOPT_TIMEOUT => 30
+    ]);
+
+    $response = curl_exec($ch);
+    $statusCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+    curl_close($ch);
+
+    if ($response !== false && $statusCode === 200) {
+        $data = json_decode($response, true);
+
+        if (isset($data["locations"][0]["location"])) {
+            $assetUrl = $data["locations"][0]["location"];
+
+            $ch = curl_init($assetUrl);
+            curl_setopt_array($ch, [
+                CURLOPT_RETURNTRANSFER => true,
+                CURLOPT_FOLLOWLOCATION => true,
+                CURLOPT_TIMEOUT => 30
+            ]);
+
+            $content = curl_exec($ch);
+            $downloadStatus = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+            curl_close($ch);
+
+            if ($content !== false && $downloadStatus === 200) {
+                $content = str_replace("roblox.com", "voxera.fit", $content);
+
+                if (!is_dir(dirname($cachedPath))) {
+                    mkdir(dirname($cachedPath), 0755, true);
+                }
+
+                file_put_contents($cachedPath, $content);
+            }
+        }
+    }
 }
 
-header("Content-Type: text/plain");
+if ($content === false || $content === null) {
+    http_response_code(404);
+    exit("Asset not found");
+}
+
+$content = str_replace("roblox.com", "voxera.fit", $content);
+
+header("Content-Type: application/octet-stream");
+header('Content-Disposition: attachment; filename="' . $assetId . '"');
+header("Content-Length: " . strlen($content));
+
 echo $content;

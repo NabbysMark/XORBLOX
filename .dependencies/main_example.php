@@ -1,21 +1,25 @@
 <?php
 
+require_once "rcc.php";
+
 // SETTINGS * do not touch plz unless you know what your doing
 
 $settings = [];
 
 // site settings * turn off maintenance and change security key if your planning to host this
 // also recommended to keep inviteonly on, 2008 is tricky when your dealing with a bunch of users.
-$settings["site"]["maintenance"] = true;
+$settings["site"]["maintenance"] = false;
 $settings["site"]["inviteonly"] = true;
+$settings["site"]["baseUrl"] = "www.yourdomain.com";
 $settings["site"]["securitykey"] = "CHANGE_THIS_TO_ANYTHING_YOU_LIKE";
+$settings["site"]["assetcookie"] = "YOUR_ROBLOSECURITY_KEY";
 
 // database settings * change connectionstring.
-$settings["db"]["connectionstring"] = "SQL_SERVER_IP;DATABASE_NAME_HERE;DATABASE_USER_HERE;PASSWORD_HERE;SQL_SERVER_PORT_USUALLY_3306";
+$settings["db"]["connectionstring"] = "localhost;roblox;root;PASSWORD_HERE;5306";
 
 // RCCService settings * change ip, port if your not using port 64989 and baseurl
 $settings["rcc"]["ip"] = "localhost";
-$settings["rcc"]["baseUrl"] = "http://www.zonbom.xyz/";
+$settings["rcc"]["baseUrl"] = "http://www.yourdomain.com/";
 $settings["rcc"]["port"] = 64989;
 
 // ACTUAL CODE WHICH CONTROLS DATABASE AND COMPONENTS, DONT TOUCH IF YOU DONT KNOW WHAT ANY OF THIS MEANS
@@ -192,7 +196,17 @@ class Component
 }
 
 $db = new Database($settings["db"]["connectionstring"]);
+$rcc = new RCCServiceSoap($settings["rcc"]["ip"], $settings["rcc"]["port"], $settings["rcc"]["baseUrl"]);
 
-if ($settings["site"]["maintenance"]) {
-
+if ($settings["site"]["maintenance"] && $_SERVER["REQUEST_URI"] != "/Maintenance.aspx") {
+    header("Location: /Maintenance.aspx");
 }
+
+function requireLogin() {
+    if (!isset($_SESSION["user_id"])) {
+        header("Location: /Landing.aspx");
+        exit;
+    }
+}
+
+session_start();
