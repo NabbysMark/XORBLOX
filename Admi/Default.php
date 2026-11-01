@@ -10,6 +10,8 @@ if ($_USER["role"] === "member") {
     exit;
 }
 ?>
+<title>Admin - Home</title>
+<?php Component::Render("adminNav"); ?>
 <h2>Hello!</h2>
-<p>Your curret rank is <a href="/Admi/<?= $_USER["role"] ?>.aspx"><?= $_USER["role"] ?></a></p>
+<p>Your curret rank is <a href="/Admi/rank/<?= $_USER["role"] ?>.aspx"><?= $_USER["role"] ?></a></p>
 <a href="players.aspx"></a>

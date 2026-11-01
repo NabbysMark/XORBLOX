@@ -27,9 +27,16 @@
                         <div id="LoginViewContainer">
                 
                         <div id="LoginView">
+                            <?php if (isset($_SESSION["user_id"])): ?>
+                            <h5>Logged In</h5>
+                            <?php else: ?>
                             <h5>Member Login</h5>
+                            <?php endif; ?>
                             
                                 <div class="AspNet-Login">
+                                    <?php if (isset($_SESSION["user_id"])): ?>
+                                    <img src="/Thumbs/Avatar.ashx?userId=<?= $_SESSION["user_id"] ?>" width="100" height="100" alt="<?= htmlspecialchars($_USER["username"] ?? "") ?>" title="<?= htmlspecialchars($_USER["username"] ?? "") ?>">
+                                    <?php else: ?>
                                     <form class="AspNet-Login" method="post">
                                         <div class="AspNet-Login-UserPanel">
                                             <label for="username" id="ctl00_cphRoblox_rbxLoginView_lvLoginView_lSignIn_UserNameLabel" class="Label">Character Name</label>
@@ -49,18 +56,16 @@
                                             <a id="ctl00_cphRoblox_rbxLoginView_lvLoginView_lSignIn_hlPasswordRecovery" tabindex="5" href="/Login/ResetPasswordRequest.aspx">Forgot your password?</a>
                                         </div>
                                     </form>
-                                
+                                    <?php endif; ?>
                             </div>
                         </div>
                     </div>
 
                         <br>
                         
-                                <div id="ctl00_cphRoblox_LoginView1_pFigure">
-                
-                                    <div id="Figure"><a id="ctl00_cphRoblox_LoginView1_ImageFigure" disabled="disabled" title="Figure" onclick="return false" style="display:inline-block;"><img src="/images/NewFrontPageGuy.png" border="0" alt="Figure" blankurl="http://t1.roblox.com:80/blank-115x130.gif"></a></div>
-                                
-            </div>  
+                        <div id="ctl00_cphRoblox_LoginView1_pFigure">
+                            <div id="Figure"><a id="ctl00_cphRoblox_LoginView1_ImageFigure" disabled="disabled" title="Figure" onclick="return false" style="display:inline-block;"><img src="/images/NewFrontPageGuy.png" border="0" alt="Figure" blankurl="http://t1.roblox.com:80/blank-115x130.gif"></a></div> 
+                        </div>  
                             
                     </div>
                     <div id="RobloxAtAGlance">
