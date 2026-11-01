@@ -1,43 +1,135 @@
-<?php require_once $_SERVER["DOCUMENT_ROOT"] . "/.dependencies/main.php"; ?>
+
 <?php
+require_once $_SERVER["DOCUMENT_ROOT"] . "/.dependencies/main.php";
+
 if (empty($_SESSION["csrf_token"])) {
     $_SESSION["csrf_token"] = bin2hex(random_bytes(32));
 }
 
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
-	$returnUrl = $_REQUEST["ReturnUrl"] ?? null;
-	$csrfToken = $_POST["csrf_verification"] ?? null;
-	$username = $_POST["username"] ?? null;
-	$password = $_POST["password"] ?? null;
-	$chatmode = $_POST["chatmode"] ?? null;
-	$agegroup = $_POST["chatmode"] ?? null;
-	$email = $_POST["email"] ?? null;
+    $csrfToken = $_POST["csrf_verification"] ?? null;
+    $username = $_POST["username"] ?? null;
+    $password = $_POST["password"] ?? null;
+    $passwordConfirm = $_POST["passwordconfirm"] ?? null;
+    $chatmode = $_POST["chatmode"] ?? null;
+    $agegroup = $_POST["agegroup"] ?? null;
+    $email = $_POST["email"] ?? null;
 
-	$hasError = false;
+    $errors = [
+        "username" => [],
+        "password" => [],
+        "passwordConfirm" => [],
+        "email" => [],
+        "agegroup" => [],
+        "chatmode" => []
+    ];
 
-	if ($agegroup == 1) {
-		http_response_code(403);
-        header("Location: /Error/Default.aspx");
-        exit;
-	}
-
-    if (!is_string($csrfToken) || !hash_equals($_SESSION["csrf_token"], $csrfToken)) {
+    if (!is_string($csrfToken) ||
+        !hash_equals($_SESSION["csrf_token"], $csrfToken)) {
         http_response_code(403);
         header("Location: /Error/Default.aspx");
         exit;
     }
 
-	if (empty($username) || !is_string($username)) {
-        $_SESSION["username_error"] = "Please enter your username.";
-        $hasError = true;
+    if (!is_string($username) || trim($username) === "") {
+        $errors["username"][] = "Please enter your username.";
+    } elseif (!preg_match('/^[a-zA-Z0-9_]{3,20}$/', $username)) {
+        $errors["username"][] =
+            "Username must be 3-20 characters and contain only letters, numbers, and underscores.";
+    } else {
+        $existingUser = $db->fetch("SELECT id FROM users WHERE username = ?", [$username]);
+
+        if ($existingUser !== null) {
+            $errors["username"][] = "That username is already taken.";
+        }
     }
 
-    if (empty($password) || !is_string($password)) {
-        $_SESSION["password_error"] = [];
-        $hasError = true;
+    if (!is_string($password) || $password === "") {
+        $errors["password"][] = "Please enter your password.";
+    } elseif (strlen($password) < 3) {
+        $errors["password"][] =
+            "Password must be atleast 3 characters.";
+    } elseif (preg_match('/\s/', $password)) {
+        $errors["password"][] = "Password cannot contain spaces.";
     }
+
+    if (!is_string($passwordConfirm) || $passwordConfirm === "") {
+        $errors["passwordConfirm"][] =
+            "Please confirm your password.";
+    } elseif (is_string($password) && $password !== $passwordConfirm) {
+        $errors["passwordConfirm"][] =
+            "Passwords do not match.";
+    }
+
+    if (!is_string($email) || trim($email) === "") {
+        $errors["email"][] = "Please enter your email address.";
+    } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        $errors["email"][] = "Please enter a valid email address.";
+    }
+
+    if (!in_array($agegroup, ["1", "2"], true)) {
+        $errors["agegroup"][] = "Please select an age group.";
+    } elseif ($agegroup === "1") {
+        $errors["agegroup"][] = "Registration is unavailable for the selected age group.";
+    }
+
+    if (!in_array($chatmode, ["true", "false"], true)) {
+        $errors["chatmode"][] = "Please select a chat mode.";
+    }
+
+    $hasError = false;
+
+    foreach ($errors as $fieldErrors) {
+        if (!empty($fieldErrors)) {
+            $hasError = true;
+        }
+    }
+
+    if ($hasError) {
+        $_SESSION["registration_errors"] = $errors;
+        header("Location: /Login/New.aspx");
+        exit;
+    }
+
+    try {
+        $db->insert("INSERT INTO users (username, password, email) VALUES (?, ?, ?)", [$username, password_hash($password, PASSWORD_DEFAULT), $email]);
+    } catch (PDOException $e) {
+        if ($e->getCode() === "23000") {
+            $_SESSION["registration_errors"] = $errors;
+            $_SESSION["registration_errors"]["username"][] = "That username is already taken.";
+
+            header("Location: /Login/New.aspx");
+            exit;
+        }
+
+        throw $e;
+    }
+
+    $user = $db->fetch(
+        "SELECT id FROM users WHERE username = ?",
+        [$username]
+    );
+
+    session_regenerate_id(true);
+    $_SESSION["user_id"] = $user["id"];
+    unset($_SESSION["registration_errors"], $_SESSION["csrf_token"]);
+
+    header("Location: /Default.aspx");
+    exit;
 }
+
+$errors = $_SESSION["registration_errors"] ?? [
+    "username" => [],
+    "password" => [],
+    "passwordConfirm" => [],
+    "email" => [],
+    "agegroup" => [],
+    "chatmode" => []
+];
+
+unset($_SESSION["registration_errors"]);
 ?>
+
 <!DOCTYPE html>
 <html>
     <head>
@@ -72,12 +164,11 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 								Use 3-20 alphanumeric characters: A-Z, a-z, 0-9, no spaces
 							</div>
 							<div class="Validators">
-								<?php if (isset($_SESSION["username_error"])): ?>
-								<div>
-                                	<div style="color:red;text-align:left;"><?= $_SESSION["username_error"] ?></div>
-                                </div>
-								<?php unset($_SESSION["username_error"]); ?>
-								<?php endif; ?>
+								<?php foreach ($errors["username"] as $error): ?>
+									<div style="color:red;text-align:left;">
+										<?= htmlspecialchars($error, ENT_QUOTES, "UTF-8") ?>
+									</div>
+								<?php endforeach; ?>
 							</div>
 							<div class="UsernameRow">
 								<label for="username" id="ctl00_cphRoblox_UserNameLabel" class="Label">Character Name:</label>&nbsp;<input name="username" type="text" id="username" tabindex="1" class="TextBox">
@@ -91,16 +182,17 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 								4-10 characters, no spaces
 							</div>
 							<div class="Validators">
-								<div></div>
-								<div></div>
-								<div></div>
-								<div></div>
+							<?php foreach ($errors["password"] as $error): ?>
+								<div style="color:red;text-align:left;">
+									<?= htmlspecialchars($error, ENT_QUOTES, "UTF-8") ?>
+								</div>
+							<?php endforeach; ?>
 							</div>
 							<div class="PasswordRow">
 								<label for="password" id="ctl00_cphRoblox_LabelPassword" class="Label">Password:</label>&nbsp;<input name="password" type="password" id="password" tabindex="2" class="TextBox">
 							</div>
 							<div class="ConfirmPasswordRow">
-								<label for="ctl00_cphRoblox_TextBoxPasswordConfirm" id="ctl00_cphRoblox_LabelPasswordConfirm" class="Label">Confirm Password:</label>&nbsp;<input name="ctl00$cphRoblox$TextBoxPasswordConfirm" type="password" id="ctl00_cphRoblox_TextBoxPasswordConfirm" tabindex="3" class="TextBox">
+								<label for="ctl00_cphRoblox_TextBoxPasswordConfirm" id="ctl00_cphRoblox_LabelPasswordConfirm" class="Label">Confirm Password:</label>&nbsp;<input name="passwordconfirm" type="password" id="ctl00_cphRoblox_TextBoxPasswordConfirm" tabindex="3" class="TextBox">
 							</div>
 						</fieldset>
 					</div>
@@ -122,9 +214,11 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 								This will allow you to recover a lost password
 							</div>
 							<div class="Validators">
-								<div></div>
-								<div></div>
-								<div></div>
+								<?php foreach ($errors["email"] as $error): ?>
+								<div style="color:red;text-align:left;">
+									<?= htmlspecialchars($error, ENT_QUOTES, "UTF-8") ?>
+								</div>
+								<?php endforeach; ?>
 							</div>
 							<div class="EmailRow">
 								<label for="email" id="ctl00_cphRoblox_LabelEmail" class="Label">Your Email:</label>&nbsp;<input name="email" type="text" id="email" tabindex="4" class="TextBox">

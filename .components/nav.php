@@ -6,10 +6,16 @@
 					<div id="Banner">
 						<div id="Options">
 							<div id="Authentication">
+								<?php if (isset($_SESSION["user_id"])): ?>
+								<span id="ctl00_lsLoginStatus">Logged in as <?= $_USER["username"] ?> | <a href="/logout.aspx">Logout</a></span>
+								<?php else: ?>
 								<span><a id="ctl00_lsLoginStatus" href="/Login/Default.aspx">Login</a></span>
+								<?php endif; ?>
 							</div>
 							<div id="Settings">
-								<span id="ctl00_lSettings"></span>
+								<?php if (isset($_SESSION["user_id"])): ?>
+								<span id="ctl00_lSettings">Age: 13+, Chat Mode: Safe</span>
+								<?php endif; ?>
 							</div>
 						</div>
 						<div id="Logo" style="height: 58px;"><a id="ctl00_rbxImage_Logo" title="XORBLOX" href="/" style="display:inline-block;cursor:pointer;"><img src="/images/roblox_logo.png" border="0" alt="XORBLOX" blankurl="http://t6.roblox.com:80/blank-224x59.gif"></a>
@@ -19,17 +25,17 @@
 </td></tr></tbody></table></div>
 					</div>
 					<div class="Navigation">
-						<span><a id="ctl00_hlMyRoblox" class="MenuItem" href="User.aspx">My XORBLOX</a></span>
+						<span><a id="ctl00_hlMyRoblox" class="MenuItem" href="/User.aspx">My XORBLOX</a></span>
 						<span class="Separator">&nbsp;|&nbsp;</span>
-						<span><a id="ctl00_hlGames" class="MenuItem" href="Games.aspx">Games</a></span>
+						<span><a id="ctl00_hlGames" class="MenuItem" href="/Games.aspx">Games</a></span>
 						<span class="Separator">&nbsp;|&nbsp;</span>
-						<span><a id="ctl00_hlCatalog" class="MenuItem" href="Catalog.aspx">Catalog</a></span>
+						<span><a id="ctl00_hlCatalog" class="MenuItem" href="/Catalog.aspx">Catalog</a></span>
 						<span class="Separator">&nbsp;|&nbsp;</span>
-						<span><a id="ctl00_hlBrowse" class="MenuItem" href="Browse.aspx">People</a></span>
+						<span><a id="ctl00_hlBrowse" class="MenuItem" href="/Browse.aspx">People</a></span>
 						<span class="Separator">&nbsp;|&nbsp;</span>
-                        <span><a id="ctl00_hlBuildersClub" class="MenuItem" href="Upgrades/BuildersClub.aspx">Builders Club</a></span>
+                        <span><a id="ctl00_hlBuildersClub" class="MenuItem" href="/Upgrades/BuildersClub.aspx">Builders Club</a></span>
 						<span class="Separator">&nbsp;|&nbsp;</span>
-						<span><a id="ctl00_hlForum" class="MenuItem" href="Forum/Default.aspx">Forum</a></span>
+						<span><a id="ctl00_hlForum" class="MenuItem" href="/Forum/Default.aspx">Forum</a></span>
 						<span class="Separator">&nbsp;|&nbsp;</span>
 						<span><a id="ctl00_hlNews" class="MenuItem" href="https://web.archive.org/web/20080613193808/http://blog.roblox.com/" target="_blank">News</a>&nbsp;<a id="ctl00_hlNewsFeed" href="https://web.archive.org/web/20080613193808/http://blog.roblox.com/?feed=rss"><img src="/images/feed-icons/feed-icon-14x14.png" alt="RSS" border="0"></a></span>
 						<span class="Separator">&nbsp;|&nbsp;</span>
