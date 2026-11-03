@@ -1,0 +1,53 @@
+{
+    "_readme": [
+        "This file locks the dependencies of your project to a known state",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
+        "This file is @generated automatically"
+    ],
+    "content-hash": "1807645c6c8c8990d2f5fd64fd358fae",
+    "packages": [
+        {
+            "name": "compactinteractive/rccservicesoap08",
+            "version": "v1.0.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/turbozap1/RCCServiceSoap08.git",
+                "reference": "4bab0a26840c9afee22ed9c34835c0f764853c4a"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/turbozap1/RCCServiceSoap08/zipball/4bab0a26840c9afee22ed9c34835c0f764853c4a",
+                "reference": "4bab0a26840c9afee22ed9c34835c0f764853c4a",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^8.1"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "CompactInteractive\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "A class to execute scripts to Roblox RCC using Soap.",
+            "support": {
+                "issues": "https://github.com/turbozap1/RCCServiceSoap08/issues",
+                "source": "https://github.com/turbozap1/RCCServiceSoap08/tree/v1.0.1"
+            },
+            "time": "2026-08-05T17:57:22+00:00"
+        }
+    ],
+    "packages-dev": [],
+    "aliases": [],
+    "minimum-stability": "stable",
+    "stability-flags": {},
+    "prefer-stable": false,
+    "prefer-lowest": false,
+    "platform": {},
+    "platform-dev": {},
+    "plugin-api-version": "2.9.0"
+}

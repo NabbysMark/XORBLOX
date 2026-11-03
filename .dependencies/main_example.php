@@ -1,6 +1,8 @@
 <?php
 
-require_once "rcc.php";
+use CompactInteractive\RCCServiceSoap08;
+
+require_once $_SERVER["DOCUMENT_ROOT"] . "/vendor/autoload.php";
 
 // SETTINGS * do not touch plz unless you know what your doing
 
@@ -19,10 +21,41 @@ $settings["db"]["connectionstring"] = "localhost;roblox;root;PASSWORD_HERE;3306"
 
 // RCCService settings * change ip, port if your not using port 64989 and baseurl
 $settings["rcc"]["ip"] = "localhost";
-$settings["rcc"]["baseUrl"] = "http://www.yourdomain.com/";
+$settings["rcc"]["baseUrl"] = "yourdomain.com";
 $settings["rcc"]["port"] = 64989;
 
 // ACTUAL CODE WHICH CONTROLS DATABASE AND COMPONENTS, DONT TOUCH IF YOU DONT KNOW WHAT ANY OF THIS MEANS
+
+RCCServiceSoap08::init($settings["rcc"]["ip"], $settings["rcc"]["port"], $settings["rcc"]["baseUrl"]);
+
+$db = new Database($settings["db"]["connectionstring"]);
+
+$_USER = null;
+
+session_start();
+
+if (isset($_SESSION["user_id"])) {
+    $_USER = $db->fetch("SELECT * FROM users WHERE id = ?", [$_SESSION["user_id"]]);
+}
+
+class Rendering {
+    public static function createAvatarRender(int $userId): string
+    {
+        if (empty($userId)) {
+            return "Invalid userId";
+        }
+
+        global $rcc;
+        $b64 = $rcc->execScript(<<<LUA
+        game.Players:CreateLocalPlayer(0)
+        game.Players.Player:LoadCharacter()
+        print("hi")
+        return game:GetService('ThumbnailGenerator'):Click("PNG", 500, 500, true)
+        LUA, "job", 0.1);
+
+        return $b64;
+    }
+}
 
 class DateFormatter {
     public static function TimeAgo(string $datetime): string
@@ -189,14 +222,12 @@ class Component
             return;
         }
 
+        $data["_USER"] = $GLOBALS["_USER"] ?? null;
         extract($data, EXTR_SKIP);
 
         require $path;
     }
 }
-
-$db = new Database($settings["db"]["connectionstring"]);
-$rcc = new RCCServiceSoap($settings["rcc"]["ip"], $settings["rcc"]["port"], $settings["rcc"]["baseUrl"]);
 
 if ($settings["site"]["maintenance"] && $_SERVER["REQUEST_URI"] != "/Maintenance.aspx") {
     header("Location: /Maintenance.aspx");
@@ -209,4 +240,25 @@ function requireLogin() {
     }
 }
 
-session_start();
+function generateJobId() {
+    $rand = bin2hex(random_bytes(8));
+    $rand2 = bin2hex(random_bytes(8));
+    return $rand . "-" . $rand2;
+}
+
+function renderCharacter(int $userid) {
+    $script = <<<LUA
+    player = game:GetService("Players"):CreateLocalPlayer(0)
+    player:LoadCharacter(0)
+    return game:GetService("ThumbnailGenerator"):Click("PNG", 500, 500, true)
+    LUA;
+
+    $jobid = generateJobId();
+    $response = RCCServiceSoap08::execute($script, $jobid, 0.1);
+
+    if($response === false) {
+        echo RCCServiceSoap08::getErrors();
+    }else {
+        return base64_decode($response);
+    }
+}

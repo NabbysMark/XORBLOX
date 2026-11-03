@@ -1,0 +1,5 @@
+{
+    "require": {
+        "compactinteractive/rccservicesoap08": "^1.0"
+    }
+}

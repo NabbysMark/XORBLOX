@@ -1,0 +1,14 @@
+{
+    "name": "compactinteractive/rccservicesoap08",
+    "description": "A class to execute scripts to Roblox RCC using Soap.",
+    "type": "library",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "CompactInteractive\\": "src/"
+        }
+    },
+    "require": {
+        "php": "^8.1"
+    }
+}
