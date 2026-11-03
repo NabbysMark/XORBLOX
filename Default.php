@@ -35,7 +35,7 @@
                             
                                 <div class="AspNet-Login">
                                     <?php if (isset($_SESSION["user_id"])): ?>
-                                    <img src="/Thumbs/Avatar.ashx?userId=<?= $_SESSION["user_id"] ?>" width="100" height="100" alt="<?= htmlspecialchars($_USER["username"] ?? "") ?>" title="<?= htmlspecialchars($_USER["username"] ?? "") ?>">
+                                    <img src="/Thumbs/Avatar.ashx?userId=<?= $_SESSION["user_id"] ?>" width="140" height="140" style="padding-top:10px;padding-bottom:10px;padding-left:2px" alt="<?= htmlspecialchars($_USER["username"] ?? "") ?>" title="<?= htmlspecialchars($_USER["username"] ?? "") ?>">
                                     <?php else: ?>
                                     <form class="AspNet-Login" method="post">
                                         <div class="AspNet-Login-UserPanel">

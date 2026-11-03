@@ -7,7 +7,7 @@ $format = $_GET["format"] ?? "Png";
 $x = $_GET["x"] ?? 500;
 $y = $_GET["y"] ?? 500;
 
-if (empty($userId) || empty($username)) {
+if (empty($userId) && empty($username)) {
     http_response_code(403);
     header("Location: /Error/Default.aspx");
     exit;
@@ -65,12 +65,7 @@ if ($format === "jpg" || $format === "jpeg") {
 
     header("Content-Type: image/jpeg");
     imagejpeg($background, null, 90);
-
-    imagedestroy($background);
 } else {
     header("Content-Type: image/png");
     imagepng($resized);
 }
-
-imagedestroy($image);
-imagedestroy($resized);
