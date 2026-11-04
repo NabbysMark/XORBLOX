@@ -133,19 +133,19 @@ requireLogin();
                                                     
                                                     <div id="Creator" class="Creator">
                                                         <div class="Avatar">
-                                                            <a id="ctl00_cphRoblox_AvatarImage" title="SnowtheFerret" href="/web/20080614231840/http://www.roblox.com/User.aspx?ID=195119" style="display:inline-block;cursor:pointer;"><img src="https://web.archive.org/web/20080614231840im_/http://t5.roblox.com:80/caef8217cd7a9b9b750bc7ec5e25af5a" border="0" alt="SnowtheFerret" blankurl="http://t6.roblox.com:80/blank-100x100.gif"></a>
+                                                            <a id="ctl00_cphRoblox_AvatarImage" title="<?= $creator["username"] ?>" href="/User.aspx?ID=<?= $creator["id"] ?>" style="display:inline-block;cursor:pointer;"><img src="/Thumbs/Avatar.ashx?username=<?= $creator["username"] ?>&x=100&y=100&format=Png" border="0" alt="<?= $creator["username"] ?>" blankurl="http://t6.roblox.com:80/blank-100x100.gif"></a>
                                                         </div>
-                                                        Creator: <a id="ctl00_cphRoblox_CreatorHyperLink" href="User.aspx?ID=195119"><?= htmlspecialchars($creator["username"]) ?></a>
+                                                        Creator: <a id="ctl00_cphRoblox_CreatorHyperLink" href="User.aspx?ID=<?= $creator["id"] ?>"><?= htmlspecialchars($creator["username"]) ?></a>
                                                     </div>
                                                     <div id="LastUpdate">Updated: <?= DateFormatter::TimeAgo($asset["created_at"]) ?></div>
                                                     <div id="Favorited">Favorited: 1,819 times</div>
                                                     <div id="ctl00_cphRoblox_VisitedPanel" class="Visited">Visited: 42,469 times</div>
+                                                    <?php if (!empty($asset["description"])): ?>
                                                     <div id="ctl00_cphRoblox_DescriptionPanel">
-                                    
                                                         <div id="DescriptionLabel">Description:</div>
                                                         <div id="Description"><?= nl2br(htmlspecialchars($asset["description"])) ?>h</div>
-                                                    
-                                </div>
+                                                    </div>
+                                                    <?php endif; ?>
                                                     <div id="ReportAbuse"><div id="ctl00_cphRoblox_AbuseReportButton1_AbuseReportPanel" class="ReportAbusePanel">
                                     
                                     <span class="AbuseIcon"><a id="ctl00_cphRoblox_AbuseReportButton1_ReportAbuseIconHyperLink" href="AbuseReport/AssetVersion.aspx?ID=3298297&amp;ReturnUrl=http%3a%2f%2fwww.roblox.com%2fItem.aspx%3fID%3d402172"><img src="/images/abuse.PNG" alt="Report Abuse" border="0"></a></span>

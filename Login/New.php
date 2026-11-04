@@ -113,7 +113,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     session_regenerate_id(true);
     $_SESSION["user_id"] = $user["id"];
     $b64 = renderCharacter($_SESSION["user_id"]);
-    file_put_contents($_SERVER["DOCUMENT_ROOT"] . "/thumbs/avatars/".$_SESSION["user_id"].".png", base64_decode($b64));
+    file_put_contents($_SERVER["DOCUMENT_ROOT"] . "/thumbs/avatars/".$_SESSION["user_id"].".png", $b64);
     unset($_SESSION["registration_errors"], $_SESSION["csrf_token"]);
 
     header("Location: /Default.aspx");

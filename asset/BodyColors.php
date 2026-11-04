@@ -8,7 +8,7 @@ if (empty($user)) {
     die("Invalid user");
 }
 
-$bodycolors = explode(";", $user["bodyColors"]);
+$bodycolors = explode(";", $user["bodycolors"]);
 
 header("Content-Type: application/xml");
 echo '<?xml version="1.0" encoding="UTF-8"?>';
