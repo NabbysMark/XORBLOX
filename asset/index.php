@@ -15,12 +15,7 @@ $content = null;
 
 $asset = $db->fetch("SELECT * FROM assets WHERE assetid = ?", [$assetId]);
 
-if (!isset($asset)) {
-    http_response_code(404);
-    exit("Asset not found");
-}
-
-if (!isset($_REQUEST["securityKey"]) || $_REQUEST["securityKey"] !== $settings["site"]["securitykey"]) {
+if (isset($asset) && (!isset($_REQUEST["securityKey"]) || $_REQUEST["securityKey"] !== $settings["site"]["securitykey"])) {
     http_response_code(401);
     exit("Unauthorized");
 }
