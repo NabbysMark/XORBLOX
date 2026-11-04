@@ -23,6 +23,7 @@ if (isset($asset) && (!isset($_REQUEST["securityKey"]) || $_REQUEST["securityKey
 $content = null;
 $errorResponse = null;
 $errorStatusCode = null;
+$assetSource = null;
 
 if (file_exists($assetPath)) {
     $content = @file_get_contents($assetPath);
@@ -33,7 +34,7 @@ if (file_exists($assetPath)) {
     if ($content !== false) {
         $asset = "--rbxassetid%" . $assetId . "%\r\n" . $content;
 
-        $asset = str_replace("www.roblox.com", "www.voxera.fit", $asset);
+        $asset = str_replace("www\.roblox.com", "www\.voxera.fit", $asset);
         $asset = str_replace("roblox.com", "voxera.fit", $asset);
 
         $signature = null;
@@ -95,6 +96,8 @@ if (file_exists($assetPath)) {
 
             if ($content === false || $downloadStatus !== 200) {
                 $content = false;
+            } else {
+                $assetSource = "roproxy";
             }
         }
     }
@@ -122,6 +125,8 @@ if (file_exists($assetPath)) {
             $errorResponse = $content !== false ? $content : "Asset delivery failed.";
 
             $content = false;
+        } else {
+            $assetSource = "proxy.95.fyi";
         }
     }
 
@@ -146,6 +151,20 @@ if ($content === false || $content === null) {
     exit;
 }
 
+if ($assetSource !== null) {
+    $logDirectory = $_SERVER["DOCUMENT_ROOT"] . "/logs";
+
+    if (!is_dir($logDirectory)) {
+        mkdir($logDirectory, 0755, true);
+    }
+
+    file_put_contents(
+        $logDirectory . "/asset-sources.log",
+        "[" . date("Y-m-d H:i:s") . "] Asset ID: " . $assetId . " | Source: " . $assetSource . PHP_EOL,
+        FILE_APPEND
+    );
+}
+
 $content = str_replace("roblox.com", "voxera.fit", $content);
 
 header("Content-Type: application/octet-stream");
@@ -153,3 +172,4 @@ header('Content-Disposition: attachment; filename="' . $assetId . '"');
 header("Content-Length: " . strlen($content));
 
 echo $content;
+exit;
