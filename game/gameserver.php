@@ -76,11 +76,6 @@ game:GetService("Players").PlayerAdded:connect(function(player)
 			characterRessurection(player)
 		end
     end)
-	delay(2, function()
-		if player ~= nil then
-			loadfile(url .. "/Game/DeathFunction.ashx")(player)
-		end
-	end)
 end)
 
 
