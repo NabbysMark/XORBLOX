@@ -13,7 +13,7 @@ $cachedPath = $_SERVER["DOCUMENT_ROOT"] . "/Asset/assets/CachedRBLXAssets/$asset
 $coreScriptPath = $_SERVER["DOCUMENT_ROOT"] . "/Asset/assets/CoreScripts/$assetId";
 $content = null;
 
-$asset = $db->fetch("SELECT * FROM assets WHERE assetid = ?", [$assetId]);
+$asset = $db->fetch("SELECT * FROM assets WHERE assetid = ? AND category = 9", [$assetId]);
 
 if (isset($asset) && (!isset($_REQUEST["securityKey"]) || $_REQUEST["securityKey"] !== $settings["site"]["securitykey"])) {
     http_response_code(401);

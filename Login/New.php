@@ -92,7 +92,8 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     }
 
     try {
-        $db->insert("INSERT INTO users (username, password, email) VALUES (?, ?, ?)", [$username, password_hash($password, PASSWORD_DEFAULT), $email]);
+        $auth = strtoupper(bin2hex(random_bytes(25)));
+        $db->insert("INSERT INTO users (username, password, email, auth) VALUES (?, ?, ?, ?)", [$username, password_hash($password, PASSWORD_DEFAULT), $email, $auth]);
     } catch (PDOException $e) {
         if ($e->getCode() === "23000") {
             $_SESSION["registration_errors"] = $errors;

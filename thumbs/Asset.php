@@ -3,8 +3,6 @@ require_once $_SERVER["DOCUMENT_ROOT"] . "/.dependencies/main.php";
 
 $assetId = $_GET["assetId"] ?? null;
 $format = $_GET["format"] ?? "Png";
-$x = $_GET["x"] ?? 500;
-$y = $_GET["y"] ?? 500;
 
 if (empty($assetId)) {
     http_response_code(403);
@@ -12,13 +10,23 @@ if (empty($assetId)) {
     exit;
 }
 
-$asset = $db->fetch("SELECT * FROM users WHERE id = ?", [$assetId]);
+$asset = $db->fetch("SELECT * FROM assets WHERE id = ?", [$assetId]);
 
 if (!$asset) {
     http_response_code(404);
     header("Location: /Error/Default.aspx");
     exit;
 }
+
+$defaultX = 420;
+$defaultY = 230;
+
+if ($asset["category"] != 9) {
+    $defaultX = 500;
+    $defaultY = 500;
+}
+$x = $_GET["x"] ?? $defaultX;
+$y = $_GET["y"] ?? $defaultY;
 
 $path = $_SERVER["DOCUMENT_ROOT"] . "/thumbs/assets/" . $asset["id"] . ".png";
 

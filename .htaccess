@@ -2,20 +2,17 @@ RewriteEngine On
 Options -Indexes
 DirectoryIndex index.php
 
-# Redirect / to /Default.aspx
 RewriteRule ^$ /Default.aspx [R=302,L]
 
-# Convert .aspx URLs to PHP files internally
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteRule ^(.+)\.aspx$ /$1.php [END,NC]
 
-# Convert handler URLs to PHP files
 RewriteRule ^(.+)\.(ashx|asmx|axd)$ /$1.php [END,NC]
 
-# Extensionless PHP routes
+RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteCond %{REQUEST_FILENAME}.php -f
-RewriteRule ^([^/.]+)/?$ $1.php [END]
+RewriteRule ^(.+?)/?$ $1.php [END,NC]
 
 ErrorDocument 404 /Error/Default.php
 

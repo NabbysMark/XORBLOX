@@ -61,7 +61,9 @@ requireLogin();
 <html>
     <head>
         <?php Component::Render("head", ["title" => $asset["name"] . " by " . $creator["username"] . " - XORBLOX " . $assetTitle . "s"]); ?>
+        <script type="text/javascript" src="/js/json2.js"></script>
         <script type="text/javascript" src="/JS/Tabs.js?v=<?= rand(1,999) ?>"></script>
+        <script type="text/javascript" src="/Game/PlaceLauncher.js?v=<?= rand(1,999) ?>"></script>
     </head>
     <body>
         <div id="Container">
@@ -73,7 +75,7 @@ requireLogin();
 		    <div id="Details">
 		        
 		                <div id="Thumbnail_Place">
-				            <a id="ctl00_cphRoblox_AssetThumbnailImage_Place" disabled="disabled" title="Build to Survive ≈ Tsunami™" onclick="return false" style="display:inline-block;"><img src="https://web.archive.org/web/20080614231840im_/http://t7.roblox.com:80/81ef111a574fe5f5b973e3fc5da3cbaf" border="0" alt="Build to Survive ≈ Tsunami™" blankurl="http://t1.roblox.com:80/blank-420x230.gif"></a>
+				            <a id="ctl00_cphRoblox_AssetThumbnailImage_Place" disabled="disabled" title="<?= htmlspecialchars($asset["name"]) ?>" onclick="return false" style="display:inline-block;"><img src="/Thumbs/Asset.ashx?assetId=<?= $asset["id"] ?>&format=Png" border="0" alt="<?= htmlspecialchars($asset["name"]) ?>" blankurl="http://t1.roblox.com:80/blank-420x230.gif"></a>
 			            </div>
 			            <div id="Actions_Place">
 			                <a id="ctl00_cphRoblox_FavoriteThisPlaceButton" disabled="disabled">Favorite</a>
@@ -88,37 +90,41 @@ requireLogin();
                                                                 Copy Protection: CopyLocked
                                                             </div>
                                                             <div id="ctl00_cphRoblox_VisitButtons_VisitMPButton" style="display:inline">
-                                    
-                                <div id="ctl00_cphRoblox_VisitButtons_rbxPlaceLauncher_Panel1" class="modalPopup" style="display: none">
-                                    
-                                    <div style="margin: 1.5em">
-                                        <div id="Spinner" style="float:left;margin:0 1em 1em 0">
-                                            <img id="ctl00_cphRoblox_VisitButtons_rbxPlaceLauncher_Image1" src="/web/20080614231840im_/http://www.roblox.com/images/ProgressIndicator2.gif" alt="Progress" border="0"></div>
-                                        <div id="Requesting" style="display: inline">
-                                            Requesting a server</div>
-                                        <div id="Waiting" style="display: none">
-                                            Waiting for a server</div>
-                                        <div id="Loading" style="display: none">
-                                            A server is loading the game</div>
-                                        <div id="Joining" style="display: none">
-                                            The server is ready. Joining the game...</div>
-                                        <div id="Error" style="display: none">
-                                            An error occured. Please try again later</div>
-                                        <div id="Expired" style="display: none">
-                                            There are no game servers available at this time. Please try again later</div>
-                                        <div id="GameEnded" style="display: none">
-                                            The game you requested has ended</div>
-                                        <div id="GameFull" style="display: none">
-                                            The game you requested is full. Please try again later</div>
-                                        <div style="text-align: center; margin-top: 1em">
-                                            <input id="Cancel" type="button" class="Button" value="Cancel"></div>
-                                    </div>
-
-                                </div>
+                                                                <div id="ctl00_cphRoblox_VisitButtons_rbxPlaceLauncher_Panel1" class="modalPopup" style="display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);">
+                                                                    <div style="margin: 1.5em">
+                                                                        <div id="Spinner" style="float:left;margin:0 1em 1em 0">
+                                                                            <img id="ctl00_cphRoblox_VisitButtons_rbxPlaceLauncher_Image1" src="/images/ProgressIndicator2.gif" alt="Progress" border="0"></div>
+                                                                        <div id="Requesting" style="display: inline">
+                                                                            Requesting a server</div>
+                                                                        <div id="Waiting" style="display: none">
+                                                                            Waiting for a server</div>
+                                                                        <div id="Loading" style="display: none">
+                                                                            A server is loading the game</div>
+                                                                        <div id="Joining" style="display: none">
+                                                                            The server is ready. Joining the game...</div>
+                                                                        <div id="Error" style="display: none">
+                                                                            An error occured. Please try again later</div>
+                                                                        <div id="Expired" style="display: none">
+                                                                            There are no game servers available at this time. Please try again later</div>
+                                                                        <div id="GameEnded" style="display: none">
+                                                                            The game you requested has ended</div>
+                                                                        <div id="GameFull" style="display: none">
+                                                                            The game you requested is full. Please try again later</div>
+                                                                        <div style="text-align: center; margin-top: 1em">
+                                                                            <input id="Cancel" type="button" class="Button" value="Cancel">
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
                                 <input type="hidden" name="ctl00$cphRoblox$VisitButtons$rbxPlaceLauncher$HiddenField1" id="ctl00_cphRoblox_VisitButtons_rbxPlaceLauncher_HiddenField1">
-
-
+                                    <?php if (!isset($_USER)): ?>
                                     <button id="ctl00_cphRoblox_VisitButtons_hlMultiplayerVisit" class="Button" onclick="window.location = '/Login/Default.aspx?ReturnUrl=http%3a%2f%2fwww.roblox.com%2fItem.aspx%3fID%3d402172'; return false;">Visit Online</button>
+                                    <?php else: ?>
+                                    <script type="text/javascript">
+                                    var behavior = createGameLauncherBehavior("ctl00_cphRoblox_VisitButtons_rbxPlaceLauncher_Panel1");
+                                    var launcher = new RBX.PlaceLauncher(behavior);
+                                    </script>
+                                    <button id="ctl00_cphRoblox_VisitButtons_hlMultiplayerVisit" class="Button" onclick="launcher.RequestGame(<?= $asset["id"] ?>); return false;">Visit Online</button>
+                                    <?php endif; ?>
                                 </div>
                                 <div id="ctl00_cphRoblox_VisitButtons_VisitButton" style="display:inline">
                                     &nbsp;&nbsp;&nbsp;<button id="ctl00_cphRoblox_VisitButtons_hlSoloVisit" class="Button" onclick="window.location = '/Login/Default.aspx?ReturnUrl=http%3a%2f%2fwww.roblox.com%2fItem.aspx%3fID%3d402172'; return false;">Visit Solo</button>
@@ -683,7 +689,7 @@ requireLogin();
                                                     <div class="<?= $index % 2 ? 'AlternateComment' : 'Comment' ?>">
                                                         <div class="Commenter">
                                                             <div class="Avatar">
-                                                                <a id="ctl00_cphRoblox_TabbedInfo_CommentaryTab_CommentsPane_CommentsRepeater_ctl01_AvatarImage" title="<?= htmlspecialchars($commentcreator["username"]) ?>" href="/web/20080614231840/http://www.roblox.com/User.aspx?ID=493323" style="display:inline-block;cursor:pointer;"><img src="https://web.archive.org/web/20080614231840im_/http://t2.roblox.com:80/c76a164a94dcde62e72ea50383269061" border="0" alt="<?= htmlspecialchars($commentcreator["username"]) ?>" blankurl="http://t6.roblox.com:80/blank-64x64.gif"></a></div>
+                                                                <a id="ctl00_cphRoblox_TabbedInfo_CommentaryTab_CommentsPane_CommentsRepeater_ctl01_AvatarImage" title="<?= htmlspecialchars($commentcreator["username"]) ?>" href="/web/20080614231840/http://www.roblox.com/User.aspx?ID=493323" style="display:inline-block;cursor:pointer;"><img src="/thumbs/avatar.ashx?username=<?= $commentcreator["username"] ?>&x=64&y=62" border="0" alt="<?= htmlspecialchars($commentcreator["username"]) ?>" blankurl="http://t6.roblox.com:80/blank-64x64.gif"></a></div>
                                                         </div>
                                                         <div class="Post">
                                                             <div class="Audit">

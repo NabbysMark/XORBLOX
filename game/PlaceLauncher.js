@@ -1,7 +1,30 @@
 function $get(id, element) {
     if (element) {
-        return element.querySelector("#" + id) ||
-            element.querySelector('[id$="' + id + '"]');
+        var found = null;
+
+        if (element.getAttribute("id") === id) {
+            return element;
+        }
+
+        var elements = element.getElementsByTagName("*");
+
+        for (var i = 0; i < elements.length; i++) {
+            var elementId = elements[i].getAttribute("id");
+
+            if (elementId === id || (
+                elementId &&
+                elementId.length >= id.length &&
+                elementId.substring(elementId.length - id.length) === id
+            )) {
+                found = elements[i];
+
+                if (elementId === id) {
+                    return found;
+                }
+            }
+        }
+
+        return found;
     }
 
     return document.getElementById(id);
@@ -45,19 +68,51 @@ var Sys = {
 };
 
 function $addHandler(element, eventName, handler) {
-    if (element) {
+    if (!element) {
+        return;
+    }
+
+    if (element.addEventListener) {
         element.addEventListener(eventName, handler, false);
+    } else if (element.attachEvent) {
+        element.attachEvent("on" + eventName, handler);
     }
 }
 
 function $removeHandler(element, eventName, handler) {
-    if (element) {
+    if (!element) {
+        return;
+    }
+
+    if (element.removeEventListener) {
         element.removeEventListener(eventName, handler, false);
+    } else if (element.detachEvent) {
+        element.detachEvent("on" + eventName, handler);
     }
 }
 
 Type.registerNamespace('Roblox.Launch');
 Type.registerNamespace('Roblox.PlaceLauncher');
+
+function createGameLauncherBehavior(popupID) {
+    return {
+        get_PopupControlID: function () {
+            return popupID;
+        },
+
+        show: function () {
+            document.getElementById(popupID).style.display = "block";
+        },
+
+        hide: function () {
+            document.getElementById(popupID).style.display = "none";
+        }
+    };
+}
+
+function urchinTracker(input) {
+    return input;
+}
 
 Roblox.PlaceLauncher.Service = {
     BaseUrl: '/Game/PlaceLauncher.ashx',
@@ -77,7 +132,23 @@ Roblox.PlaceLauncher.Service = {
     },
 
     _request: function (parameters, onSuccess, onError, context) {
-        var xhr = new XMLHttpRequest();
+        var xhr = null;
+
+        if (window.XMLHttpRequest) {
+            xhr = new XMLHttpRequest();
+        } else if (window.ActiveXObject) {
+            try {
+                xhr = new ActiveXObject("Microsoft.XMLHTTP");
+            } catch (e) {
+                try {
+                    xhr = new ActiveXObject("Msxml2.XMLHTTP");
+                } catch (e2) {
+                    onError("XMLHttpRequest is unavailable", context);
+                    return;
+                }
+            }
+        }
+        
         var query = [];
         var key;
 
@@ -222,9 +293,9 @@ Roblox.Launch.StartGame = function (visitUrl, authenticationUrl, type, userID)
             else
             {
                 prefix = "App/";
-                var app = new ActiveXObject("Roblox.App");
+                var app = new ActiveXObject("Xorblox.App");
                 if (!app)
-                    throw "app is null or undefined";
+                    //throw "app is null or undefined";
                 
                 prefix = "App/CreateGame/";
                 var workspace = app.CreateGame(2);
