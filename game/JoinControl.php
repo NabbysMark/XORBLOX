@@ -3,8 +3,6 @@ require_once $_SERVER["DOCUMENT_ROOT"] . "/.dependencies/main.php";
 
 header("Content-Type: text/plain");
 
-use CompactInteractive\RCCServiceSoap08;
-
 $action = $_GET["Action"] ?? "";
 $userId = (int)($_GET["UserId"] ?? 0);
 $jobId = $_GET["jobID"] ?? "";

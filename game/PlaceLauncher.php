@@ -21,7 +21,7 @@ switch ($request) {
         $job = $db->fetch("SELECT * FROM jobs WHERE assetid = ? AND status IN (0, 1, 2) AND players < maxplayers ORDER BY players ASC LIMIT 1", [$placeId]);
 
         if (!$job) {
-            $jobId = bin2hex(random_bytes(16));
+            $jobId = generateJobId();
 
             $port = rand(53640,66666);
 
@@ -39,7 +39,7 @@ switch ($request) {
                     throw new Exception("Failed to retrieve game server script");
                 }
 
-                $rcc->execScript($gameserverScript, generateJobId(), 9999999);
+                $rcc->execScript($gameserverScript, $jobId, 9999999);
                 $db->execute("UPDATE jobs SET status = 2 WHERE jobid = ?", [$jobId]);
 
             } catch (Throwable $e) {
