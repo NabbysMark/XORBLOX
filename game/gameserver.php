@@ -67,8 +67,7 @@ game:GetService("RunService").Stepped:connect(function (time) shared["__time"] =
 
 game:GetService("Players").PlayerAdded:connect(function(player)
    	if not test then
-        print(url .. "/Game/JoinControl.ashx?Action=Join&UserId="..player.userId.."&jobID=".."<?= $job["jobid"] ?>".."&accessKey=<?= $settings["site"]["securitykey"] ?>")
-	    dofile(url .. "/Game/JoinControl.ashx?Action=Join&UserId="..player.userId.."&jobID=".."<?= $job["jobid"] ?>".."&accessKey=<?= $settings["site"]["securitykey"] ?>")
+	    game:HttpGet(url .. "/Game/JoinControl.ashx?Action=Join&UserId="..player.userId.."&jobID=".."<?= $job["jobid"] ?>".."&accessKey=<?= $settings["site"]["securitykey"] ?>", true)
 	end
 	print("Player " .. player.userId .. " added")
 	characterRessurection(player)
@@ -89,7 +88,7 @@ game:GetService("Players").PlayerRemoving:connect(function(player)
 	print("Player " .. player.userId .. " leaving")
     if not test then
         print(url .. "/Game/JoinControl.ashx?Action=Join&UserId="..player.userId.."&jobID=".."<?= $job["jobid"] ?>".."&accessKey=<?= $settings["site"]["securitykey"] ?>")
-	    dofile(url .. "/Game/JoinControl.ashx?Action=Leave&UserId="..player.userId.."&jobID=".."<?= $job["jobid"] ?>".."&accessKey=<?= $settings["site"]["securitykey"] ?>")
+	    game:HttpGet(url .. "/Game/JoinControl.ashx?Action=Leave&UserId="..player.userId.."&jobID=".."<?= $job["jobid"] ?>".."&accessKey=<?= $settings["site"]["securitykey"] ?>", true)
 	end
 end)
 
