@@ -24,14 +24,33 @@ switch ($request) {
             $jobId = bin2hex(random_bytes(16));
 
             $port = 53640;
-            $db->execute("INSERT INTO jobs (jobid, status, port, assetid, players, maxplayers) VALUES (?, 0, ?, ?, 0, 6)", [$jobId, $port, $placeId]);
 
-            $gameserverScript = file_get_contents("http://{$settings["site"]["baseUrl"]}/game/gameserver.ashx?jobID=".$jobId);                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     
-            RCCServiceSoap08::execute($gameserverScript, generateJobId(), 999999999);
+            $db->execute(
+                "INSERT INTO jobs (jobid, status, port, assetid, players, maxplayers) VALUES (?, 0, ?, ?, 0, 6)",
+                [$jobId, $port, $placeId]
+            );
+
+            try {
+                $gameserverScript = file_get_contents(
+                    "http://{$settings["site"]["baseUrl"]}/game/gameserver.ashx?jobID=" . $jobId
+                );
+
+                if ($gameserverScript === false) {
+                    throw new Exception("Failed to retrieve game server script");
+                }
+
+                RCCServiceSoap08::execute($gameserverScript, generateJobId(), 999999999);
+
+                $db->execute("UPDATE jobs SET status = 2 WHERE jobid = ?", [$jobId]);
+
+            } catch (Throwable $e) {
+                $db->execute("UPDATE jobs SET status = 3 WHERE jobid = ?", [$jobId]);
+                error_log("startup failed: " . $e->getMessage());
+            }
 
             $job = [
                 "jobid" => $jobId,
-                "status" => 0,
+                "status" => $db->fetch("SELECT status FROM jobs WHERE jobid = ?", [$jobId])["status"],
                 "port" => $port,
                 "assetid" => $placeId,
                 "players" => 0,

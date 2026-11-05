@@ -30,24 +30,15 @@ if (!$job) {
 
 switch ($action) {
     case "Join":
-        $existing = $db->fetch(
-            "SELECT id FROM players WHERE userid = ? AND jobid = ? LIMIT 1",
-            [$userId, $jobId]
-        );
+        $existing = $db->fetch("SELECT id FROM players WHERE userid = ? AND jobid = ? LIMIT 1", [$userId, $jobId]);
 
         if (!$existing) {
-            $db->execute(
-                "INSERT INTO players (userid, jobid) VALUES (?, ?)",
-                [$userId, $jobId]
-            );
+            $db->execute("INSERT INTO players (userid, jobid) VALUES (?, ?)", [$userId, $jobId]);
         }
         break;
 
     case "Leave":
-        $db->execute(
-            "DELETE FROM players WHERE userid = ? AND jobid = ?",
-            [$userId, $jobId]
-        );
+        $db->execute("DELETE FROM players WHERE userid = ? AND jobid = ?", [$userId, $jobId]);
         break;
 
     default:
@@ -55,10 +46,8 @@ switch ($action) {
         exit("400");
 }
 
-$count = $db->fetch(
-    "SELECT COUNT(*) AS total FROM players WHERE jobid = ?",
-    [$jobId]
-);
+$count = $db->fetch("SELECT COUNT(*) AS total FROM players WHERE jobid = ?", [$jobId]);
+$db->execute("UPDATE jobs SET players = (SELECT COUNT(*) FROM players WHERE jobid = ?) WHERE jobid = ?", [$jobId, $jobId]);
 
 $db->execute(
     "UPDATE jobs SET players = ? WHERE jobid = ?",
