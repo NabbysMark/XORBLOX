@@ -23,7 +23,7 @@ switch ($request) {
         if (!$job) {
             $jobId = bin2hex(random_bytes(16));
 
-            $port = 53640;
+            $port = rand(53640,66666);
 
             $db->execute(
                 "INSERT INTO jobs (jobid, status, port, assetid, players, maxplayers) VALUES (?, 0, ?, ?, 0, 6)",
@@ -39,8 +39,7 @@ switch ($request) {
                     throw new Exception("Failed to retrieve game server script");
                 }
 
-                RCCServiceSoap08::execute($gameserverScript, generateJobId(), 999999999);
-
+                $rcc->execScript($gameserverScript, generateJobId(), 9999999);
                 $db->execute("UPDATE jobs SET status = 2 WHERE jobid = ?", [$jobId]);
 
             } catch (Throwable $e) {

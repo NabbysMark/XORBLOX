@@ -1,4 +1,10 @@
 <?php require_once $_SERVER["DOCUMENT_ROOT"] . "/.dependencies/main.php"; ?>
+<?php
+if (isset($_SESSION["user_id"])) {
+    header("Location: /Default.aspx");
+    exit;
+}
+?>
 <title>XORBLOX</title>
 <script src="/JS/SuppressRedirect.js" type="text/javascript"></script>
 <div align="center">

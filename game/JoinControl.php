@@ -53,7 +53,7 @@ $db->execute("UPDATE jobs SET players = (SELECT COUNT(*) FROM players WHERE jobi
 
 if ($count["total"] === 0) {
     try {
-        RCCServiceSoap08::closeJob($jobId);
+        $rcc->closeJob($jobId);
         $db->execute("UPDATE jobs SET status = 5, players = 0 WHERE jobid = ?", [$jobId]);
     } catch (Throwable $e) {
         error_log("failed to close server {$jobId}: " . $e->getMessage());
