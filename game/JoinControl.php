@@ -3,6 +3,8 @@ require_once $_SERVER["DOCUMENT_ROOT"] . "/.dependencies/main.php";
 
 header("Content-Type: text/plain");
 
+use CompactInteractive\RCCServiceSoap08;
+
 $action = $_GET["Action"] ?? "";
 $userId = (int)($_GET["UserId"] ?? 0);
 $jobId = $_GET["jobID"] ?? "";
@@ -48,6 +50,15 @@ switch ($action) {
 
 $count = $db->fetch("SELECT COUNT(*) AS total FROM players WHERE jobid = ?", [$jobId]);
 $db->execute("UPDATE jobs SET players = (SELECT COUNT(*) FROM players WHERE jobid = ?) WHERE jobid = ?", [$jobId, $jobId]);
+
+if ($count["total"] === 0) {
+    try {
+        RCCServiceSoap08::closeJob($jobId);
+        $db->execute("UPDATE jobs SET status = 5, players = 0 WHERE jobid = ?", [$jobId]);
+    } catch (Throwable $e) {
+        error_log("failed to close server {$jobId}: " . $e->getMessage());
+    }
+}
 
 $db->execute(
     "UPDATE jobs SET players = ? WHERE jobid = ?",

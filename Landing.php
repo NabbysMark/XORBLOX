@@ -1,5 +1,6 @@
 <?php require_once $_SERVER["DOCUMENT_ROOT"] . "/.dependencies/main.php"; ?>
 <title>XORBLOX</title>
+<script src="/JS/SuppressRedirect.js" type="text/javascript"></script>
 <div align="center">
     <img src="/images/roblox_logo.png">
     <h2>THIS WEBSITE IS HOSTING A XORBLOX INSTANCE!</h2>
